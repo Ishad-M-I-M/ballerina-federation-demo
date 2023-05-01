@@ -70,4 +70,20 @@ isolated service on new graphql:Listener(PORT) {
             return finalResult.cloneWithType();
         }
     }
+
+    isolated remote function addReview(graphql:Field 'field, ReviewInput reviewInput) returns Review|error {
+        QueryFieldClassifier classifier = new ('field, queryPlan, REVIEWS);
+        string fieldString = classifier.getFieldString();
+        UnResolvableField[] propertiesNotResolved = classifier.getUnresolvableFields();
+        string queryString = wrapwithMutation("addReview", fieldString, {"reviewInput": getParamAsString(reviewInput)});
+        addReviewResponse response = check REVIEWS_CLIENT->execute(queryString);
+        Review result = response.data.addReview;
+        Resolver resolver = new (queryPlan, result.toJson(), "Review", propertiesNotResolved, ["addReview"]);
+        json|error finalResult = resolver.getResult();
+        if finalResult is error {
+            return finalResult;
+        } else {
+            return finalResult.cloneWithType();
+        }
+    }
 }

@@ -19,6 +19,13 @@ public type Review record {|
     string id?;
 |};
 
+public type ReviewInput record {|
+    string author;
+    float rating;
+    string comment;
+    string productId;
+|};
+
 public type productResponse record {
     record {|Product product;|} data;
 };
@@ -29,4 +36,8 @@ public type productsResponse record {
 
 public type reviewsResponse record {
     record {|Review[] reviews;|} data;
+};
+
+public type addReviewResponse record {
+    record {|Review addReview;|} data;
 };
